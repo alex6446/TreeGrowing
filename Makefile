@@ -1,32 +1,42 @@
-CXX 		= g++
-CXXEXT 		= cpp
-CXXFLAGS	= 
+CXX 			= g++
+CXXEXT 			= cpp
+CXXFLAGS		= 
 
-SOURCE_PATH = Source
-BUILD_PATH 	= Build
+SRC_DIR 		= src
+INC_DIR			= include include/ImGUI
+LIB_DIR 		= libs
+BUILD_DIR 		= build
 
-LIBRARIES	= -lsfml-graphics -lsfml-window -lsfml-system -lGL -lthor
-INCLUDE		= -I Include/ -I Include/ImGUI
+LIBS			= -lsfml-graphics -lsfml-window -lsfml-system -lGL -lthor 
 
-TARGET 		= run
-SOURCES 	= $(shell find $(SOURCE_PATH) -type f -name *.$(CXXEXT))
-OBJECTS 	= $(SOURCES:$(SOURCE_PATH)/%.$(CXXEXT)=$(BUILD_PATH)/%.o)
+COMPILE_FLAGS 	= $(INC_DIR:%=-I %) $(CXXFLAGS)
+LINKING_FLAGS 	= $(LIB_DIR:%=-L %) $(LIB_DIR:%=-Wl,-rpath %) $(LIBS)
+
+TARGET 			= run
+SOURCES 		= $(shell find $(SRC_DIR) -type f -name *.$(CXXEXT))
+OBJECTS 		= $(SOURCES:$(SRC_DIR)/%.$(CXXEXT)=$(BUILD_DIR)/%.o)
 
 
-all: directory $(TARGET)
+
+all: $(TARGET)
 	./$(TARGET)
 
-.PHONY: directory
-directory:
-	@mkdir -p $(BUILD_PATH)
-	@mkdir -p $(BUILD_PATH)/ImGUI
-
 $(TARGET): $(OBJECTS)
-	$(CXX) $^ -o $(TARGET) $(LIBRARIES)
+	$(CXX) $^ -o $(TARGET) $(LINKING_FLAGS)
 
-$(BUILD_PATH)/%.o: $(SOURCE_PATH)/%.$(CXXEXT)
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+.PRECIOUS: $(BUILD_DIR)/. $(BUILD_DIR)%/.
+
+$(BUILD_DIR)/.:
+	mkdir -p $@
+
+$(BUILD_DIR)%/.:
+	mkdir -p $@
+
+.SECONDEXPANSION:
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.$(CXXEXT) | $$(@D)/.
+	$(CXX) $(COMPILE_FLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
-	rm -r $(BUILD_PATH) $(TARGET) 
+	rm -r $(BUILD_DIR) $(TARGET) 
