@@ -7,7 +7,8 @@
 using namespace sf;
 
 Ground::Ground () 
-: m_humidity(DEFAULT_HUMIDITY), m_minerals(DEFAULT_MINERALS)
+: m_minerals(DEFAULT_MINERALS),
+  m_humidity(DEFAULT_HUMIDITY) 
 {}
 
 void Ground::setup (RenderWindow &window, Air &air) {

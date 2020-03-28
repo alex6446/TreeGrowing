@@ -19,6 +19,7 @@ Tree::Tree (Vector2f position)
 }
 
 void Tree::update (Air &air, Ground &ground, Sun &sun) {
+	if (m_growth >= 100.f) return;
 	if (m_growth < 15.f) m_collected = m_required.multiply(m_growth * 10.f);
 	else collect_resources(air, ground, sun);
 

@@ -6,7 +6,9 @@ using namespace sf;
 using namespace std;
 
 TreeDrawer::TreeDrawer (Vector2f position) 
-: m_shapes(0), m_current(0), m_path("Shapes/Plants/Tree/")
+: m_shapes(0), 
+  m_current(0), 
+  m_path("Shapes/Plants/Tree/")
 {
 	ifstream fin;
 	while (true) {

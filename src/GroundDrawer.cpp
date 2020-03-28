@@ -7,8 +7,9 @@ using namespace sf;
 using namespace std;
 
 GroundDrawer::GroundDrawer ()
-: m_surface(sf::TriangleStrip), m_soil(sf::TriangleStrip)
-{ 	srand(time(NULL)); }
+: m_surface(sf::TriangleStrip), 
+  m_soil(sf::TriangleStrip)
+{ srand(time(NULL)); }
 	
 void GroundDrawer::generate_mesh (RenderWindow &window) {
 	float median = window.getSize().y * GROUND_SIZE;

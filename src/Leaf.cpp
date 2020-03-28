@@ -1,12 +1,13 @@
 #include "Leaf.h"
 
-Leaf::Leaf (Resources &required, Resources &resources) 
+using namespace sf;
+
+Leaf::Leaf (Resources &required, Resources &resources, float scale, Vector2f &origin) 
 : m_required(required), // TODO: make m_required a refference
-  m_ration(10.f, 13.f, 16.f),
+  m_ration(5.f, 6.f, 7.f),
   m_square(1.f),
   m_dead(false),
-  m_active(true)
-  //m_drawable()
+  m_drawable(scale, origin)
 {
 	feed(resources);
 }
@@ -30,19 +31,23 @@ void Leaf::setSquare (float square) {
 }
 
 void Leaf::generatePosition (PlantShape &shape) {
-	//m_drawable.generatePosition(shape)
+	m_drawable.generatePosition(shape);
+}
+
+void Leaf::scalePosition (float growth) {
+	m_drawable.scalePosition(growth);
 }
 
 void Leaf::update (float growth) {
 	if (!m_dead) {
 		consume();
 		check_life();
-	} 
-	//m_drawable.update(growth, m_active, m_dead);
+	}
+	m_drawable.update(m_dead, growth, m_square);
 }
 
-void Leaf::draw (sf::RenderWindow &window) {
-	//m_drawable.draw(window);
+void Leaf::draw (RenderWindow &window) {
+	m_drawable.draw(window);
 }
 
 void Leaf::consume () {
@@ -52,6 +57,5 @@ void Leaf::consume () {
 void Leaf::check_life () {
 	if (!m_resources.water || !m_resources.energy || !m_resources.materials) {
 		m_dead = true;
-		m_active = false; // this line should be removed later
 	}
 }

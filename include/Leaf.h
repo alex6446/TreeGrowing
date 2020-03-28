@@ -17,15 +17,13 @@ private:
     Resources 	m_ration;
     
     float       m_square;
-
     bool 		m_dead;
-    bool 		m_active;
 
-    //LeafDrawer  m_drawable;
+    LeafDrawer  m_drawable;
 
 public:
 
-    Leaf (Resources &required, Resources &resources);
+    Leaf (Resources &required, Resources &resources, float scale, sf::Vector2f &origin);
     ~Leaf ();
 
     float getWater (Air &air, Sun &sun);
@@ -34,9 +32,10 @@ public:
 
     void setSquare (float square);
     void generatePosition (PlantShape &shape);
+    void scalePosition (float growth);
 
     bool isDead () { return m_dead; }
-    bool isActive () { return m_active; }
+    bool isActive () { return m_drawable.isActive(); }
 
     void update (float growth);
     void draw (sf::RenderWindow &window);

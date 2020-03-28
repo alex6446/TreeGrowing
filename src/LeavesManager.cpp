@@ -5,7 +5,7 @@ using namespace std;
 
 LeavesManager::LeavesManager () 
 : m_required(10.f, 13.f, 16.f),
-  m_growingRate(1.5)
+  m_growingRate(2.f)
 {}
 
 Resources LeavesManager::collect (Air &air, Sun &sun) {
@@ -25,11 +25,12 @@ void LeavesManager::feed (Resources &resources) {
 			leaf.feed(resources);
 }
 
-// TODO: check if leaf will survive in next iteration
+// TODO: check if leaf will survive in next iteration -- done
 void LeavesManager::grow (Resources &resources, float growth, PlantShape &shape) {
 	int limit = growth * m_growingRate;
-	while (resources.check_capacity(m_required) && m_leaves.size() <= limit) {
-		m_leaves.emplace_back(m_required, resources);
+	cout << "LIMIT " << limit << endl;
+	while (resources.check_capacity(m_required.multiply(1.f)) && m_leaves.size() <= limit) {
+		m_leaves.emplace_back(m_required, resources, growth / 100.f, m_origin);
 		m_leaves.back().generatePosition(shape);
 	}
 }
@@ -40,17 +41,19 @@ void LeavesManager::setOrigin (Vector2f origin) {
 
 void LeavesManager::generatePosition (PlantShape &shape) {
 	for (auto &leaf : m_leaves)
-		leaf.generatePosition(shape);
+		if (!leaf.isDead())
+			leaf.generatePosition(shape);
 }
 
 void LeavesManager::update (float growth) {
 	for (int i = 0; i < m_leaves.size(); i++) {
 		if (!m_leaves[i].isActive()) {
 			m_leaves.erase(m_leaves.begin() + i);
+		} else {
+			m_leaves[i].scalePosition(growth);
+			m_leaves[i].update(growth);
 			cout << m_leaves.size() << endl;
 		}
-		else
-			m_leaves[i].update(growth);
 	}
 }
 

@@ -7,7 +7,8 @@
 using namespace sf;
 
 Sun::Sun () 
-: m_warm(DEFAULT_WARM), m_brightness(DEFAULT_BRIGHTNESS) 
+: m_warm(DEFAULT_WARM), 
+  m_brightness(DEFAULT_BRIGHTNESS) 
 { m_drawable.update_warm(m_warm); m_drawable.update_brightness(m_brightness); }
 
 void Sun::update () {

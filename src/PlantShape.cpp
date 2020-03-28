@@ -6,7 +6,8 @@ using namespace std;
 using namespace sf;
 
 PlantShape::PlantShape () 
-: mOrigin(Vector2f(0.f, 0.f)), mScale(1.f)
+: mOrigin(Vector2f(0.f, 0.f)), 
+  mScale(1.f)
 {}
 
 void PlantShape::setScale (float k) {

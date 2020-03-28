@@ -7,7 +7,8 @@
 #include <iostream>
 
 Air::Air () 
-: m_humidity(DEFAULT_HUMIDITY), m_temperature(DEFAULT_TEMPERATURE) 
+: m_humidity(DEFAULT_HUMIDITY), 
+  m_temperature(DEFAULT_TEMPERATURE) 
 { update_color(); }
 
 float Air::getTemperaturePercentage () {

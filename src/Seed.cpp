@@ -7,7 +7,10 @@ using namespace std;
 using namespace sf;
 
 Seed::Seed ()
-: m_active(false), m_falling(false), m_bottom(1080.f), m_step(5.f)
+: m_bottom(1080.f), 
+  m_active(false), 
+  m_falling(false), 
+  m_step(5.f)
 {}
 
 void Seed::setPlant (string name) {
