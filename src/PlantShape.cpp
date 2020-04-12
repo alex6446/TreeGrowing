@@ -11,7 +11,7 @@ PlantShape::PlantShape ()
 {}
 
 void PlantShape::setScale (float k) {
-	for (int i = 0; i < getPointCount(); i++)
+	for (size_t i = 0; i < getPointCount(); i++)
 		setPoint(i, mOrigin + (getPoint(i) - mOrigin) * k / mScale);
 	mScale = k;
 }
@@ -19,7 +19,7 @@ void PlantShape::setScale (float k) {
 void PlantShape::setPosition (Vector2f position) {
 	Vector2f move = position - mOrigin;
 	mOrigin += move;
-	for (int i = 0; i < getPointCount(); i++)
+	for (size_t i = 0; i < getPointCount(); i++)
 		setPoint(i, getPoint(i) + move);
 	mPosition = position;
 }
@@ -31,7 +31,7 @@ void PlantShape::loadFromFile (std::string file) {
 	while (fin >> point.x >> point.y)
 		verticies.push_back(point);
 	setPointCount(verticies.size());
-	for (int i = 0; i < verticies.size(); i++)
+	for (size_t i = 0; i < verticies.size(); i++)
 		setPoint(i, verticies[i]);
 	mOrigin = Vector2f((getPoint(getPointCount()-1).x + getPoint(0).x)/2, getPoint(0).y);
 	mScale = 1.f;

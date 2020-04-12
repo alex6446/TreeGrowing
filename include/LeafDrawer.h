@@ -17,10 +17,12 @@ private:
 
 public:
 
-	LeafDrawer (float scale, sf::Vector2f &origin);
+	LeafDrawer (
+		float scale, 
+		sf::Vector2f origin
+	);
 
 	void generatePosition (PlantShape &shape);
-	void loadFromFile (std::string file);
 
 	void setScale (float growth, float square);
 	void scalePosition (float growth);
@@ -28,5 +30,9 @@ public:
 
 	void update (bool dead, float growth, float square);
 	void draw (sf::RenderWindow &window);
+
+private:
+
+	void loadFromFile (std::string file);
 
 };

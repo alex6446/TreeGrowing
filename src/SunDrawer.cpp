@@ -9,30 +9,26 @@ SunDrawer::SunDrawer () {
 	CircleShape circle;
 	circle.setRadius(SUN_RADIUS);
 	circle.setOrigin(circle.getRadius(),circle.getRadius());
-	circle.setPosition(Vector2f(75.f, 75.f));
-	circle.setFillColor(Color(240, 160, 50));
-	for (int i = 0; i < RAYS_NUMBER; i++)
+	circle.setPosition(SUN_POSITION);
+	circle.setFillColor(Color(SUN_COLD_COLOR.x, SUN_COLD_COLOR.y, SUN_COLD_COLOR.z));
+	for (size_t i = 0; i < SUN_RAYS_NUMBER; i++)
 		m_circles.push_back(circle);
 }
 
-void SunDrawer::update_warm (int warm) {
-	float k = (float)(-MIN_WARM + warm) / (MAX_WARM - MIN_WARM);
-	Color color = Color(
-		SUN_COLOR_RED,
-		SUN_COLOR_GREEN + (225 - SUN_COLOR_GREEN) * k,
-		SUN_COLOR_BLUE + (210 - SUN_COLOR_BLUE) * k,
-		MAX_ALPHA
-	);
+void SunDrawer::update_warm (float warm) {
+	float k = (-MIN_WARM + warm) / (MAX_WARM - MIN_WARM);
+	Vector3f color = SUN_COLD_COLOR + (SUN_HOT_COLOR - SUN_COLD_COLOR) * k;
+	Color sun_color = Color(color.x, color.y, color.z);
 	for (auto &circle : m_circles) {
-		circle.setFillColor(color);
-		color.a /= Q_COEFFICIENT;
+		circle.setFillColor(sun_color);
+		sun_color.a /= SUN_Q_COEFFICIENT;
 	}
 }
 
-void SunDrawer::update_brightness (int brightness) {
-	float k = (float)(-MIN_BRIGHTNESS + brightness) / (MAX_BRIGHTNESS - MIN_BRIGHTNESS);
-	float radius = k * (compute_radius(RAYS_NUMBER) - SUN_RADIUS) + SUN_RADIUS;
-	for (int i = 0; i < m_circles.size(); i++) {
+void SunDrawer::update_brightness (float brightness) {
+	float k = (-MIN_BRIGHTNESS + brightness) / (MAX_BRIGHTNESS - MIN_BRIGHTNESS);
+	float radius = k * (compute_radius(SUN_RAYS_NUMBER) - SUN_RADIUS) + SUN_RADIUS;
+	for (size_t i = 0; i < m_circles.size(); i++) {
 		m_circles[i].setRadius(compute_radius(i+1));
 		if (radius < m_circles[i].getRadius())
 			m_circles[i].setRadius(radius);
@@ -45,10 +41,10 @@ void SunDrawer::draw (RenderWindow &window) {
 		window.draw(circle);
 }
 
-float SunDrawer::compute_radius (int index) {
+float SunDrawer::compute_radius (unsigned index) {
 	float r = SUN_RADIUS;
-	for (int i = 1; i < index; i++) {
-		r *= Q_COEFFICIENT;
+	for (size_t i = 1; i < index; i++) {
+		r *= SUN_Q_COEFFICIENT;
 	}
 	return r;
 }

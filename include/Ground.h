@@ -8,8 +8,8 @@
 class Ground {
 private:
 	
-	int 			m_minerals; // 0 .. 100
-	int 			m_humidity; // 0 .. 100
+	float 			m_minerals; // 0 .. 1
+	float 			m_humidity; // 0 .. 1
 	GroundDrawer 	m_drawable;
 
 public:
@@ -17,9 +17,13 @@ public:
 	Ground ();
 	void setup (sf::RenderWindow &window, Air &air);
 
-	int getMinerals () const { return m_minerals; }
-	int getHumidity () const { return m_humidity; }
+	float getMinerals () const { return m_minerals; }
+	float getHumidity () const { return m_humidity; }
 
+	void updateImGUI ();
 	void update (Air &air);
 	void draw (sf::RenderWindow &window);
+
+private:
+
 };

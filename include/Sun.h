@@ -7,17 +7,19 @@
 class Sun {
 private:
 	
-	int 			m_warm; // 0 .. 100
-	int 			m_brightness; // 0 .. 100
+	float 			m_warm; // 0 .. 1
+	float 			m_brightness; // 0 .. 1
 	SunDrawer 		m_drawable;
 
 public:
 
 	Sun ();
 
-	int getWarm () const { return m_warm; }
-	int getBrightness () const { return m_brightness; }
+	float getWarm () const { return m_warm; }
+	float getBrightness () const { return m_brightness; }
 
+	void updateImGUI ();
 	void update ();
 	void draw (sf::RenderWindow &window);
+
 };

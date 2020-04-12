@@ -12,14 +12,19 @@
 
 class Tree {
 private:
-	
+
+	int 				m_id;
+	std::string	 		m_name;
+	std::string	 		m_title;
+	int 				m_mode;
+
 	Resources 			m_resources;
 	Resources 			m_required;
 	Resources 			m_ration;
 	Resources 			m_collected;
 
 	float 				m_growingRate;
-	float 				m_growth;
+	float 				m_growth; // 0..1
 	bool 				m_dead;
 
 	LeavesManager	 	m_leaves;
@@ -27,7 +32,7 @@ private:
 
 public:
 
-	Tree (sf::Vector2f position);
+	Tree (sf::Vector2f position, int id);
 
 	bool isDead () { return m_dead; }
 
@@ -40,5 +45,7 @@ private:
 	void distribute_resources ();
 	void check_life ();
 	void consume ();
+
+	void updateImGUI ();
 
 };

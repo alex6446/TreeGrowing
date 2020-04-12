@@ -10,11 +10,31 @@ using namespace sf;
 PlantsManager::PlantsManager () {}
 
 void PlantsManager::setup (RenderWindow &window) {
-	m_seed.setBottom(window.getSize().y * GROUND_SIZE);
+	m_seed.setBottom(window.getSize().y * GROUND_HEIGHT);
 }
 
 void PlantsManager::update (Air &air, Ground &ground, Sun &sun, Vector2f mousePosition) {
-    ImGui::Begin("Plants");
+
+    if (m_seed.update(mousePosition)) {
+    	string plant = m_seed.getPlant();
+    	if (plant == "Tree")
+    		m_trees.emplace_back(m_seed.getPosition(), m_trees.size());
+
+    }
+
+    for (auto &tree : m_trees)
+    	tree.update(air, ground, sun);
+
+}
+
+void PlantsManager::draw (RenderWindow &window) {
+	for (auto &tree : m_trees)
+    	tree.draw(window);
+    m_seed.draw(window);
+}
+
+void PlantsManager::updateImGUI () {
+	ImGui::Text("Plants");
 
     const char* items[] = { "Tree", "Flower", "Grass" };
 	static const char* current_item = "Tree";
@@ -33,22 +53,4 @@ void PlantsManager::update (Air &air, Ground &ground, Sun &sun, Vector2f mousePo
 		m_seed.setPlant(current_item);
 	}
 
-    ImGui::End();
-
-    if (m_seed.update(mousePosition)) {
-    	string plant = m_seed.getPlant();
-    	if (plant == "Tree")
-    		m_trees.emplace_back(m_seed.getPosition());
-
-    }
-
-    for (auto &tree : m_trees)
-    	tree.update(air, ground, sun);
-
-}
-
-void PlantsManager::draw (RenderWindow &window) {
-	for (auto &tree : m_trees)
-    	tree.draw(window);
-    m_seed.draw(window);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 #include "LeafDrawer.h"
 #include "Air.h"
@@ -13,17 +14,22 @@ class Leaf {
 private:
 
     Resources 	m_resources;
-    Resources 	m_required;
+    std::shared_ptr<Resources> 	m_required;
     Resources 	m_ration;
     
-    float       m_square;
+    float       m_square; // 0..1 ?
     bool 		m_dead;
 
     LeafDrawer  m_drawable;
 
 public:
 
-    Leaf (Resources &required, Resources &resources, float scale, sf::Vector2f &origin);
+    Leaf (
+        std::shared_ptr<Resources> required, 
+        Resources &resources, 
+        float scale, 
+        sf::Vector2f origin
+    );
     ~Leaf ();
 
     float getWater (Air &air, Sun &sun);

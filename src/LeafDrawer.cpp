@@ -9,15 +9,19 @@
 using namespace std;
 using namespace sf;
 
-LeafDrawer::LeafDrawer (float scale, Vector2f &origin) 
-: m_scale(scale),
-  m_active(true), 
-  m_falling(false),
-  m_growing(true),
-  m_step(1.f),
-  m_origin(origin)
+LeafDrawer::LeafDrawer (
+	float scale, 
+	Vector2f origin
+) : 
+	m_scale(scale),
+	m_active(true), 
+	m_falling(false),
+	m_growing(true),
+	m_step(1.f),
+	m_origin(origin)
 {
-	m_leaf.setFillColor(Color(19, 117, 27));
+	//m_leaf.setFillColor(Color(19, 117, 27));
+	m_leaf.setFillColor(Color(26, 117, 65));
 	loadFromFile("Shapes/Leaves/Tree.txt");
 	m_leaf.setScale(0.01f, 0.01f);
 }
@@ -29,7 +33,7 @@ void LeafDrawer::generatePosition (PlantShape &shape) {
 	Vector2f pos = shape.getPoint(ind) + branch * t;
 	m_leaf.setPosition(pos);
 	if (branch.y < 0) branch *= -1.f;
-	float alpha = atan2(branch.y, branch.x) * 180 / M_PI * -1 + 180;
+	float alpha = atan2(branch.y, branch.x) * 180.f / M_PI * -1.f + 180.f;
 	int range = 120;
 	float angle = 90.f - (rand() % range - range / 2 + alpha);
 	m_leaf.setRotation(angle);
@@ -42,14 +46,14 @@ void LeafDrawer::loadFromFile (string file) {
 	while (fin >> point.x >> point.y)
 		entity.push_back(point);
 	m_leaf.setPointCount(entity.size());
-	for (int i = 0; i < entity.size(); i++)
+	for (size_t i = 0; i < entity.size(); i++)
 		m_leaf.setPoint(i, entity[i]);
 	m_leaf.setOrigin(m_leaf.getPoint(0));
 }
 
 void LeafDrawer::setScale (float growth, float square) {
-	float k = growth / 120.f;
-	if (m_growing || growth < 100.f * 0.3f) {
+	float k = growth / 1.2f * square;
+	if (m_growing || growth < 1.f * 0.3f) {
 		if (m_leaf.getScale().x < k)
 			m_leaf.scale(1.05f, 1.05f);
 		else m_growing = false;
@@ -59,8 +63,8 @@ void LeafDrawer::setScale (float growth, float square) {
 }
 
 void LeafDrawer::scalePosition (float growth) {
-	m_leaf.setPosition(m_origin + (m_leaf.getPosition() - m_origin) * (growth / 100.f) / m_scale);
-	m_scale = growth / 100.f;
+	m_leaf.setPosition(m_origin + (m_leaf.getPosition() - m_origin) * growth / m_scale);
+	m_scale = growth;
 }
 
 void LeafDrawer::update (bool dead, float growth, float square) {

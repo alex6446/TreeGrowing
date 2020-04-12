@@ -1,6 +1,6 @@
 CXX 			= g++
 CXXEXT 			= cpp
-CXXFLAGS		= 
+CXXFLAGS		= -Wall -MMD -MP
 
 SRC_DIR 		= src
 INC_DIR			= include include/ImGUI
@@ -15,6 +15,7 @@ LINKING_FLAGS 	= $(LIB_DIR:%=-L %) $(LIB_DIR:%=-Wl,-rpath %) $(LIBS)
 TARGET 			= run
 SOURCES 		= $(shell find $(SRC_DIR) -type f -name *.$(CXXEXT))
 OBJECTS 		= $(SOURCES:$(SRC_DIR)/%.$(CXXEXT)=$(BUILD_DIR)/%.o)
+DEPENDENCIES 	= $(OBJECTS:.o=.d)
 
 
 
@@ -40,3 +41,5 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.$(CXXEXT) | $$(@D)/.
 .PHONY: clean
 clean:
 	rm -r $(BUILD_DIR) $(TARGET) 
+
+-include $(DEPENDENCIES)

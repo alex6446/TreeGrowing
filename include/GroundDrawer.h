@@ -10,6 +10,7 @@ private:
 	sf::VertexArray m_surface;
 	sf::VertexArray m_soil;
 	std::vector<sf::CircleShape> m_minerals;
+	unsigned int m_mineralsNumber;
 
 public:
 
@@ -19,7 +20,8 @@ public:
 	void generate_minerals (sf::RenderWindow &window);
 
 	void update_color (Air &air);
-	void draw (sf::RenderWindow &window, int minerals);
+	void update_minerals (float minerals);
+	void draw (sf::RenderWindow &window);
 
 private:
 

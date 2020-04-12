@@ -12,13 +12,13 @@ public:
 
 	SunDrawer ();
 
-	void update_warm (int warm);
-	void update_brightness (int brightness);
+	void update_warm (float warm);
+	void update_brightness (float brightness);
 	void draw (sf::RenderWindow &window);
 
 private:
 
-	float compute_radius (int index);
+	float compute_radius (unsigned index);
 
 };
 

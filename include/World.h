@@ -10,6 +10,8 @@
 class World {
 private:
 
+	int 				m_mode;
+
 	Air 				m_air;
 	Ground 				m_ground;
 	Sun 				m_sun;
@@ -27,4 +29,9 @@ public:
 
 	void update ();
 	void draw ();
+
+private:
+
+	void updateImGUI ();
+
 };

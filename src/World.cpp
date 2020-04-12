@@ -5,7 +5,10 @@
 
 using namespace sf;
 
-World::World () {
+World::World ()
+: 
+	m_mode(0)
+{
 	ContextSettings settings;
 	settings.antialiasingLevel = 8;
 	m_window.create(VideoMode::getDesktopMode(), "Plant Growing Simulation", Style::Fullscreen, settings);
@@ -34,6 +37,7 @@ void World::update () {
 	}
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
 
+	updateImGUI();
 	m_air.update();
 	m_ground.update(m_air);
 	m_sun.update();
@@ -47,4 +51,20 @@ void World::draw () {
 	m_sun.draw(m_window);
 	ImGui::SFML::Render(m_window);
 	m_window.display();
+}
+
+void World::updateImGUI () {
+	ImGui::Begin("Wrld");
+	if (ImGui::Button("   Settings   ")) m_mode = 0;
+	ImGui::SameLine();
+	if (ImGui::Button("   Info   ")) m_mode = 1;
+	switch (m_mode) {
+		case 0:
+		m_air.updateImGUI();
+		m_ground.updateImGUI();
+		m_sun.updateImGUI();
+		m_plants.updateImGUI();
+		break;
+	}
+	ImGui::End();
 }

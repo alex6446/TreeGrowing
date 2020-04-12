@@ -2,12 +2,17 @@
 
 using namespace sf;
 
-Leaf::Leaf (Resources &required, Resources &resources, float scale, Vector2f &origin) 
-: m_required(required), // TODO: make m_required a refference
-  m_ration(5.f, 6.f, 7.f),
-  m_square(1.f),
-  m_dead(false),
-  m_drawable(scale, origin)
+Leaf::Leaf (
+	std::shared_ptr<Resources> required, 
+	Resources &resources, 
+	float scale, 
+	Vector2f origin
+) : 
+	m_required(required), // TODO: make m_required a refference (pointer) -- done
+	m_ration(0.01f, 0.012f, 0.0005f),
+	m_square(1.f),
+	m_dead(false),
+	m_drawable(scale, origin)
 {
 	feed(resources);
 }
@@ -15,15 +20,24 @@ Leaf::Leaf (Resources &required, Resources &resources, float scale, Vector2f &or
 Leaf::~Leaf () {}
 
 float Leaf::getWater (Air &air, Sun &sun) {
-	return air.getHumidity() * (1.05f - air.getTemperaturePercentage()) * m_square;
+	return 
+		air.getHumidity() * 
+		(1.01f - air.getTemperatureNormalized()) * 
+		(1.01f - sun.getWarm() * sun.getBrightness()) * 
+		m_square;
 }
 
 float Leaf::getEnergy (Air &air, Sun &sun) {
-	return sun.getWarm() * sun.getBrightness() * (air.getTemperaturePercentage() + 1.f) * m_square; // TODO: decrease water if its hot
+	return 
+		sun.getWarm() * 
+		sun.getBrightness() * 
+		//(air.getTemperatureNormalized() + 1.f) * 
+		(air.getTemperatureNormalized() / 2.f + 1.f) * 
+		m_square; // TODO: decrease water if its hot
 }
 
 void Leaf::feed (Resources &resources) {
-	m_resources.add(resources.subtract(m_required.multiply(m_square)));	
+	m_resources.add(resources.subtract(m_required->multiply(m_square + 1.f)));	
 }
 
 void Leaf::setSquare (float square) {
