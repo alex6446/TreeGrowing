@@ -1,4 +1,5 @@
 #include "Leaf.h"
+#include "Confines.h"
 
 using namespace sf;
 
@@ -21,19 +22,17 @@ Leaf::~Leaf () {}
 
 float Leaf::getWater (Air &air, Sun &sun) {
 	return 
-		air.getHumidity() * 
-		(1.01f - air.getTemperatureNormalized()) * 
-		(1.01f - sun.getWarm() * sun.getBrightness()) * 
-		m_square;
+		(air.getHumidity() - 
+		(air.getTemperature() - DEFAULT_TEMPERATURE) / 10.f * 
+		sun.getWarm() * sun.getBrightness()) * 
+		m_square * 0.1f;
 }
 
 float Leaf::getEnergy (Air &air, Sun &sun) {
 	return 
-		sun.getWarm() * 
-		sun.getBrightness() * 
-		//(air.getTemperatureNormalized() + 1.f) * 
-		(air.getTemperatureNormalized() / 2.f + 1.f) * 
-		m_square; // TODO: decrease water if its hot
+		(sun.getWarm() * sun.getBrightness() + 
+		(air.getTemperature() - DEFAULT_TEMPERATURE) / 10.f) * 
+		m_square * 0.5f;
 }
 
 void Leaf::feed (Resources &resources) {

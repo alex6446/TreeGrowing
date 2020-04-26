@@ -11,8 +11,8 @@ Tree::Tree (Vector2f position, int id)
 : 
 	m_id(id),
 	m_mode(0),
-	m_required(0.24f, 0.35f, 0.005f),
-	m_ration(0.24f, 0.35f, 0.004f),
+	m_required(0.24f, 0.35f, 0.25f),
+	m_ration(0.24f, 0.35f, 0.24f),
 	m_growingRate(0.00001f),
 	m_growth(0.01f),
 	m_dead(false),
@@ -47,8 +47,8 @@ void Tree::draw (RenderWindow &window) {
 void Tree::collect_resources (Air &air, Ground &ground, Sun &sun) {
 	m_collected.add(m_leaves.collect(air, sun));
 	//m_collected = m_leaves.collect(air, sun);
-	m_collected.water += ground.getHumidity() * m_growth;
-	m_collected.materials += ground.getMinerals() * m_growth;
+	m_collected.water += ground.getHumidity() * (m_growth + 1.f) - (air.getTemperature() - DEFAULT_TEMPERATURE) / 10.f * m_growth ;
+	m_collected.materials += ground.getMinerals() * (m_growth + 1.f);
 }
 
 void Tree::distribute_resources () {
@@ -62,6 +62,7 @@ void Tree::distribute_resources () {
 			m_growth += m_growingRate;
 	}
 	//m_resources.add(m_collected);
+	//m_collected = Resources(0.f, 0.f, 0.f);
 }
 
 void Tree::consume () {
