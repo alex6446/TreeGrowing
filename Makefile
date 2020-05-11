@@ -1,9 +1,14 @@
 CXX 			= g++
 CXXEXT 			= cpp
-CXXFLAGS		= -Wall -MMD -MP
+CXXFLAGS		=  -MMD -MP
 
-SRC_DIR 		= src
-INC_DIR			= include
+SRC_DIR 		= .
+INC_DIR			= vendor \
+				  vendor/ImGUI \
+				  TreeGrowing/include \
+				  NodelEditor/include \
+				  TreeGrowing/src
+
 LIB_DIR 		= libs
 BUILD_DIR 		= build
 
@@ -12,7 +17,7 @@ LIBS			= -lsfml-graphics -lsfml-window -lsfml-system -lGL -lthor
 COMPILE_FLAGS 	= $(INC_DIR:%=-I %) $(CXXFLAGS)
 LINKING_FLAGS 	= $(LIB_DIR:%=-L %) $(LIB_DIR:%=-Wl,-rpath %) $(LIBS)
 
-TARGET 			= run
+TARGET 			= application
 SOURCES 		= $(shell find $(SRC_DIR) -type f -name *.$(CXXEXT))
 OBJECTS 		= $(SOURCES:$(SRC_DIR)/%.$(CXXEXT)=$(BUILD_DIR)/%.o)
 DEPENDENCIES 	= $(OBJECTS:.o=.d)
