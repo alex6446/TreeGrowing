@@ -5,12 +5,15 @@ using namespace sf;
 
 Leaf::Leaf (
 	std::shared_ptr<Resources> required, 
+	std::shared_ptr<Resources> eatrate, 
+	std::shared_ptr<Resources> max_resources, 
 	Resources &resources, 
 	float scale, 
 	Vector2f origin
 ) : 
 	m_required(required), // TODO: make m_required a refference (pointer) -- done
-	m_ration(0.01f, 0.012f, 0.0005f),
+	m_eatrate(eatrate),
+	m_max_resources(max_resources),
 	m_square(1.f),
 	m_dead(false),
 	m_drawable(scale, origin)
@@ -36,7 +39,8 @@ float Leaf::getEnergy (Air &air, Sun &sun) {
 }
 
 void Leaf::feed (Resources &resources) {
-	m_resources.add(resources.subtract(m_required->multiply(m_square + 1.f)));	
+	m_resources.add(resources.subtract(m_required->multiply(m_square + 1.f)));
+	m_resources.cutoff(*m_max_resources);	
 }
 
 void Leaf::setSquare (float square) {
@@ -64,7 +68,7 @@ void Leaf::draw (RenderWindow &window) {
 }
 
 void Leaf::consume () {
-	m_resources.subtract(m_ration.multiply(m_square));
+	m_resources.subtract((m_required->multiply(*m_eatrate)).multiply(m_square));
 }
 
 void Leaf::check_life () {

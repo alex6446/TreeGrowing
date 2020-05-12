@@ -16,7 +16,8 @@ private:
 
     Resources 	m_resources;
     std::shared_ptr<Resources> 	m_required;
-    Resources 	m_ration;
+    std::shared_ptr<Resources> 	m_eatrate;
+    std::shared_ptr<Resources>  m_max_resources;
     
     float       m_square; // 0..1 ?
     bool 		m_dead;
@@ -27,6 +28,8 @@ public:
 
     Leaf (
         std::shared_ptr<Resources> required, 
+        std::shared_ptr<Resources> eatrate,
+        std::shared_ptr<Resources> max_resources,
         Resources &resources, 
         float scale, 
         sf::Vector2f origin

@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "PlantShape.h"
 
-class TreeDrawer {
+class PlantDrawer {
 private:
 
 	PlantShape 	m_tree;
@@ -14,7 +14,7 @@ private:
 
 public:
 
-	TreeDrawer (sf::Vector2f positoin);
+	PlantDrawer (sf::Vector2f positoin);
 
 	PlantShape& getShape () { return m_tree; }
 

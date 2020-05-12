@@ -15,6 +15,8 @@ private:
 	std::vector<Leaf> 				m_leaves;
 	sf::Vector2f				 	m_origin;
 	std::shared_ptr<Resources> 		m_required;
+	std::shared_ptr<Resources> 		m_eatrate;
+	std::shared_ptr<Resources> 		m_max_resources;
 	float 							m_growingRate; // 50 / 33 = 1.5 листьев на 1 рост
 
 public:

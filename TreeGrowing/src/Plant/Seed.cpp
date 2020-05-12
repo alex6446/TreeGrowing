@@ -3,6 +3,9 @@
 
 #include <fstream>
 #include <vector>
+#include <string>
+
+#include "ConfigReader.h"
 
 using namespace std;
 using namespace sf;
@@ -18,8 +21,8 @@ Seed::Seed ()
 void Seed::setPlant (string name) {
 	string file = "assets/Models/";
 	file.append(name);
-	file.append("/seed.txt");
-	ifstream fin(file);
+	string config = file + "/config.txt";
+	ifstream fin(file + "/seed.txt");
 	if (!fin.good()) return;
 
 	vector<Vector2f> verticies;
@@ -33,9 +36,9 @@ void Seed::setPlant (string name) {
 		m_seed.setPoint(i, verticies[i]); 
 	m_seed.setOrigin(Vector2f(m_seed.getPoint(m_seed.getPointCount()/2).x, 
 							  m_seed.getPoint(m_seed.getPointCount()/2).y));
-
-	m_seed.setScale(SEED_SCALE);
-	m_seed.setFillColor(Color(r, g, b));
+	float scale = getConfigFloat(config, "SEED_SCALE");
+	m_seed.setScale(scale, scale);
+	m_seed.setFillColor(getConfigColor(config, "SEED_COLOR"));
 
 	m_plant = name;
 	m_active = true;

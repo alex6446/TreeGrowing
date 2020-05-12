@@ -66,6 +66,3 @@
 #define SEED_SPEED 			 5.f
 #define SEED_ACCELERATION 	 1.f
 
-
-// TREE ////////////////////
-

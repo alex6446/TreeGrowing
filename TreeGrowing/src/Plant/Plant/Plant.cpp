@@ -1,4 +1,4 @@
-#include "Tree.h"
+#include "Plant.h"
 #include "Config.h"
 
 #include "ImGUI/imgui.h"
@@ -7,12 +7,15 @@
 using namespace sf;
 using namespace std;
 
-Tree::Tree (Vector2f position, int id) 
+Plant::Plant (Vector2f position, int id, string type) 
 : 
+	m_type(type),
 	m_id(id),
 	m_mode(0),
 	m_required(0.24f, 0.35f, 0.25f),
-	m_ration(0.24f, 0.35f, 0.24f),
+	m_eatrate(0.99f, 0.99f, 0.96),
+	m_max_collected(10000.f, 10000.f, 10000.f),
+	m_max_resources(10000.f, 10000.f, 10000.f),
 	m_growingRate(0.00001f),
 	m_growth(0.01f),
 	m_dead(false),
@@ -21,38 +24,42 @@ Tree::Tree (Vector2f position, int id)
 {
 	m_name.resize(255);
 	m_title.resize(255);
-	m_name = "Tree " + to_string(m_id);
-	m_title =  m_name + "###Tree" + to_string(m_id);
+	m_name = m_type + " " + to_string(m_id);
+	m_title =  m_name + "###" + m_type + to_string(m_id);
 }
 
-void Tree::update (Air &air, Ground &ground, Sun &sun) {
+void Plant::update (Air &air, Ground &ground, Sun &sun) {
 	updateImGUI ();
-	if (m_growth < 0.15f) m_collected = m_required.multiply(m_growth * 1000.f);
-	collect_resources(air, ground, sun);
+	if (!m_dead) {
+		if (m_growth < 0.15f) m_collected = m_required.multiply(m_growth * 1000.f);
+		collect_resources(air, ground, sun);
 
-	distribute_resources();
+		distribute_resources();
 
-	consume();
-	check_life();
-	if (m_drawable.update(m_growth))
-		m_leaves.generatePosition(m_drawable.getShape());
+		consume();
+		check_life();
+		if (m_drawable.update(m_growth))
+			m_leaves.generatePosition(m_drawable.getShape());
+	}
 	m_leaves.update(m_growth);
 }
 
-void Tree::draw (RenderWindow &window) {
+void Plant::draw (RenderWindow &window) {
 	m_drawable.draw(window);
 	m_leaves.draw(window);
 }
 
-void Tree::collect_resources (Air &air, Ground &ground, Sun &sun) {
+void Plant::collect_resources (Air &air, Ground &ground, Sun &sun) {
 	m_collected.add(m_leaves.collect(air, sun));
 	//m_collected = m_leaves.collect(air, sun);
 	m_collected.water += ground.getHumidity() * (m_growth + 1.f) - (air.getTemperature() - DEFAULT_TEMPERATURE) / 10.f * m_growth ;
 	m_collected.materials += ground.getMinerals() * (m_growth + 1.f);
+	m_collected.cutoff(m_max_collected);
 }
 
-void Tree::distribute_resources () {
+void Plant::distribute_resources () {
 	m_resources.add(m_collected.subtract(m_required.multiply(m_growth + 1.f)));
+	m_resources.cutoff(m_max_resources);
 	m_leaves.feed(m_collected);
 	m_leaves.grow(m_collected, m_growth, m_drawable.getShape());
 
@@ -65,16 +72,16 @@ void Tree::distribute_resources () {
 	//m_collected = Resources(0.f, 0.f, 0.f);
 }
 
-void Tree::consume () {
-	m_resources.subtract(m_ration.multiply(m_growth + 1.f));
+void Plant::consume () {
+	m_resources.subtract((m_required.multiply(m_eatrate)).multiply(m_growth + 1.f));
 }
 
-void Tree::check_life () {
+void Plant::check_life () {
 	if (!m_resources.water || !m_resources.energy || !m_resources.materials)
 		m_dead = true;
 }
 
-void Tree::updateImGUI () {
+void Plant::updateImGUI () {
 	ImGui::Begin(m_title.c_str());
 	if (ImGui::Button("   Settings   ")) m_mode = 0;
 	ImGui::SameLine();
@@ -87,10 +94,10 @@ void Tree::updateImGUI () {
 		ImGui::SliderFloat("water##Required", &m_required.water, 0.f, 1.f);
 		ImGui::SliderFloat("energy##Required", &m_required.energy, 0.f, 1.f);
 		ImGui::SliderFloat("materials##Required", &m_required.materials, 0.f, 1.f);
-		ImGui::Text("Ration");
-		ImGui::SliderFloat("water##Ration", &m_ration.water, 0.f, 1.f);
-		ImGui::SliderFloat("energy##Ration", &m_ration.energy, 0.f, 1.f);
-		ImGui::SliderFloat("materials##Ration", &m_ration.materials, 0.f, 1.f);	
+		ImGui::Text("EatRate");
+		ImGui::SliderFloat("water##EatRate", &m_eatrate.water, 0.f, 1.f);
+		ImGui::SliderFloat("energy##EatRate", &m_eatrate.energy, 0.f, 1.f);
+		ImGui::SliderFloat("materials##EatRate", &m_eatrate.materials, 0.f, 1.f);	
 		ImGui::Text("Name");
 		if( ImGui::InputText("##Change name", input, 255)) {
 			m_name = input;

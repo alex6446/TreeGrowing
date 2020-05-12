@@ -1,6 +1,6 @@
 CXX 			= g++
 CXXEXT 			= cpp
-CXXFLAGS		=  -MMD -MP
+CXXFLAGS		=  -MMD -MP -std=c++17
 
 SRC_DIR 		= .
 INC_DIR			= vendor \

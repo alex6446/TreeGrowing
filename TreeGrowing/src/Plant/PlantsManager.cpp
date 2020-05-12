@@ -1,13 +1,23 @@
 #include "PlantsManager.h"
 #include "Config.h"
 
+#include <iostream>
+#include <filesystem>
+
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui-SFML.h"
 
 using namespace std;
 using namespace sf;
 
-PlantsManager::PlantsManager () {}
+PlantsManager::PlantsManager () {
+	std::string s = "assets/Models/";
+	std::vector<std::string> r;
+    for(auto& p : filesystem::directory_iterator(s))
+        m_types.push_back((p.path().string()).erase(0, s.size()));
+
+    m_current_type = m_types[0];
+}
 
 void PlantsManager::setup (RenderWindow &window) {
 	m_seed.setBottom(window.getSize().y * GROUND_HEIGHT);
@@ -16,19 +26,16 @@ void PlantsManager::setup (RenderWindow &window) {
 void PlantsManager::update (Air &air, Ground &ground, Sun &sun, Vector2f mousePosition) {
 
     if (m_seed.update(mousePosition)) {
-    	string plant = m_seed.getPlant();
-    	if (plant == "Tree")
-    		m_trees.emplace_back(m_seed.getPosition(), m_trees.size());
-
+    	m_plants.emplace_back(m_seed.getPosition(), m_plants.size(), m_seed.getPlant());
     }
 
-    for (auto &tree : m_trees)
+    for (auto &tree : m_plants)
     	tree.update(air, ground, sun);
 
 }
 
 void PlantsManager::draw (RenderWindow &window) {
-	for (auto &tree : m_trees)
+	for (auto &tree : m_plants)
     	tree.draw(window);
     m_seed.draw(window);
 }
@@ -36,13 +43,11 @@ void PlantsManager::draw (RenderWindow &window) {
 void PlantsManager::updateImGUI () {
 	ImGui::Text("Plants");
 
-    const char* items[] = { "Tree", "Flower", "Grass" };
-	static const char* current_item = "Tree";
-    if (ImGui::BeginCombo("##combo", current_item)) {
-	    for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
-	        bool is_selected = (current_item == items[n]);
-	        if (ImGui::Selectable(items[n], is_selected))
-	            current_item = items[n];
+    if (ImGui::BeginCombo("##combo", m_current_type.c_str())) {
+	    for (int n = 0; n < m_types.size(); n++) {
+	        bool is_selected = (m_current_type == m_types[n]);
+	        if (ImGui::Selectable(m_types[n].c_str(), is_selected))
+	            m_current_type = m_types[n];
 	        if (is_selected)
 	            ImGui::SetItemDefaultFocus(); 
 	    }
@@ -50,7 +55,7 @@ void PlantsManager::updateImGUI () {
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Get Seed")) {
-		m_seed.setPlant(current_item);
+		m_seed.setPlant(m_current_type);
 	}
 
 }

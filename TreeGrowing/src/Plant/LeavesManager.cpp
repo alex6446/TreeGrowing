@@ -9,6 +9,8 @@ LeavesManager::LeavesManager (Vector2f origin)
 : 
 	m_origin(origin),
 	m_required(new Resources(0.01f, 0.013f, 0.0006f)),
+	m_eatrate(new Resources(1.f, 0.92f, 0.83f)),
+	m_max_resources(new Resources(10000.f, 10000.f, 10000.f)),
 	m_growingRate(200.f)
 {}
 
@@ -34,7 +36,7 @@ void LeavesManager::grow (Resources &resources, float growth, PlantShape &shape)
 	size_t limit = growth * m_growingRate;
 	//while (resources.check_capacity(m_required->multiply(1.f)) && m_leaves.size() <= limit) {
 	while (resources.check_capacity(m_required->multiply(1.f)) && m_leaves.size() <= limit) {
-		m_leaves.emplace_back(m_required, resources, growth, m_origin);
+		m_leaves.emplace_back(m_required, m_eatrate, m_max_resources, resources, growth, m_origin);
 		m_leaves.back().generatePosition(shape);
 	}
 }

@@ -11,5 +11,7 @@ public:
 	Resources add (Resources res);
 	Resources subtract (Resources res);
 	Resources multiply (float k);
+	Resources multiply (Resources res);
 	bool check_capacity (Resources res);
+	void cutoff (Resources res);
 };

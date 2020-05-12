@@ -1,8 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <string>
 
-#include "TreeDrawer.h"
+#include "PlantDrawer.h"
 #include "Plant/LeavesManager.h"
 #include "World/Air.h"
 #include "World/Ground.h"
@@ -10,8 +11,10 @@
 
 #include "Plant/Resources.h"
 
-class Tree {
+class Plant {
 private:
+
+	std::string			m_type;
 
 	int 				m_id;
 	std::string	 		m_name;
@@ -20,19 +23,22 @@ private:
 
 	Resources 			m_resources;
 	Resources 			m_required;
-	Resources 			m_ration;
+	Resources 			m_eatrate;
 	Resources 			m_collected;
+
+	Resources 			m_max_collected;
+	Resources 			m_max_resources;
 
 	float 				m_growingRate;
 	float 				m_growth; // 0..1
 	bool 				m_dead;
 
 	LeavesManager	 	m_leaves;
-	TreeDrawer 			m_drawable;
+	PlantDrawer 		m_drawable;
 
 public:
 
-	Tree (sf::Vector2f position, int id);
+	Plant (sf::Vector2f position, int id, std::string type);
 
 	bool isDead () { return m_dead; }
 

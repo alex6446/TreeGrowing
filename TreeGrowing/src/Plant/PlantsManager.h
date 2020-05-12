@@ -2,9 +2,10 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <string>
 
 #include "Seed.h"
-#include "Plant/Tree.h"
+#include "Plant/Plant.h"
 #include "World/Air.h"
 #include "World/Ground.h"
 #include "World/Sun.h"
@@ -12,8 +13,11 @@
 class PlantsManager {
 private:
 
-    std::vector<Tree> 	m_trees;
-    Seed 				m_seed;
+    std::vector<Plant> 			m_plants;
+    Seed 						m_seed;
+
+    std::vector<std::string> 	m_types;
+    std::string 				m_current_type;
 
 public:
     

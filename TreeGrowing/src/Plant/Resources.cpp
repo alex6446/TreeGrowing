@@ -53,6 +53,14 @@ Resources Resources::multiply (float k) {
 	return temp;
 }
 
+Resources Resources::multiply (Resources res) {
+	Resources temp;
+	temp.water = water * res.water;
+	temp.energy = energy * res.energy;
+	temp.materials = materials * res.materials;
+	return temp;
+}
+
 bool Resources::check_capacity (Resources res) {
 	if (water - res.water < 0.f) return false;
 	if (energy - res.energy < 0.f) return false;
@@ -60,5 +68,10 @@ bool Resources::check_capacity (Resources res) {
 	return true;
 }
 
+void Resources::cutoff (Resources res) {
+	if (water > res.water) water = res.water;
+	if (energy > res.energy) energy = res.energy;
+	if (materials > res.materials) materials = res.materials;
+}
 
 
