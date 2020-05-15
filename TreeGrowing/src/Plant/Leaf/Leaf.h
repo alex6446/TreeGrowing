@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <string>
 
 #include "LeafDrawer.h"
 
@@ -18,11 +19,12 @@ private:
     std::shared_ptr<Resources> 	m_required;
     std::shared_ptr<Resources> 	m_eatrate;
     std::shared_ptr<Resources>  m_max_resources;
-    
-    float       m_square; // 0..1 ?
-    bool 		m_dead;
 
-    LeafDrawer  m_drawable;
+    float           m_square;  
+    bool 		    m_dead;
+    std::string     m_type;
+
+    LeafDrawer      m_drawable;
 
 public:
 
@@ -32,7 +34,9 @@ public:
         std::shared_ptr<Resources> max_resources,
         Resources &resources, 
         float scale, 
-        sf::Vector2f origin
+        sf::Vector2f origin,
+        std::string type,
+        sf::ConvexShape &mesh
     );
     ~Leaf ();
 

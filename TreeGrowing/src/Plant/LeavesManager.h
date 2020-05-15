@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
+#include <string>
 
 #include "Leaf/Leaf.h"
 #include "Plant/PlantShape.h"
@@ -17,11 +18,14 @@ private:
 	std::shared_ptr<Resources> 		m_required;
 	std::shared_ptr<Resources> 		m_eatrate;
 	std::shared_ptr<Resources> 		m_max_resources;
-	float 							m_growingRate; // 50 / 33 = 1.5 листьев на 1 рост
+
+	float				m_growingRate; // 50 / 33 = 1.5 листьев на 1 рост
+	std::string			m_type;
+	sf::ConvexShape 	m_mesh;
 
 public:
 
-	LeavesManager (sf::Vector2f origin);
+	LeavesManager (sf::Vector2f origin, std::string type);
 
 	Resources collect (Air &air, Sun &sun);
 	void feed (Resources &resources);
@@ -31,5 +35,9 @@ public:
 
 	void update (float growth);
 	void draw (sf::RenderWindow &window);
+
+private:
+
+	void loadFromFile (std::string file);
 
 };

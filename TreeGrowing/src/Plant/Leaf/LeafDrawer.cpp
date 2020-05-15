@@ -1,4 +1,6 @@
 #include "LeafDrawer.h"
+#include "Plant/ConfigReader.h"
+#include "Config.h"
 
 #include <vector>
 #include <fstream>
@@ -11,54 +13,68 @@ using namespace sf;
 
 LeafDrawer::LeafDrawer (
 	float scale, 
-	Vector2f origin
+	Vector2f origin,
+	string type,
+	ConvexShape &leaf
 ) : 
 	m_scale(scale),
 	m_active(true), 
 	m_falling(false),
 	m_growing(true),
 	m_step(1.f),
-	m_origin(origin)
+	m_origin(origin),
+	m_type(type),
+	m_leaf(leaf)
 {
 	//m_leaf.setFillColor(Color(19, 117, 27));
-	m_leaf.setFillColor(Color(26, 117, 65));
-	loadFromFile("assets/Models/Tree/leaf.txt");
-	m_leaf.setScale(0.01f, 0.01f);
+	string file = MODELS_FOLDER;
+	file += type;
+	string config = file + CONFIG_FILE;
+	m_leaf.setFillColor(getConfigColor(config, "LEAVES_COLOR"));
+	//loadFromFile(file + LEAF_FILE);
+	m_scale_factor = getConfigVector2f(config, "LEAVES_SCALE_FACTOR");
+	m_leaf.setScale(0.01f * m_scale_factor);
+	m_mesh_start = getConfigFloat(config, "LEAVES_MESH_START_PADDING");
+	m_mesh_end = getConfigFloat(config, "LEAVES_MESH_END_PADDING");
+	m_angle_range = getConfigFloat(config, "LEAVES_ANGLE_RANGE");
+	m_leaves_direction = getConfigFloat(config, "LEAVES_DIRECTION");
 }
 
 void LeafDrawer::generatePosition (PlantShape &shape) {
-	int ind = rand()%(shape.getPointCount()-5) + 2;
+	int ind = rand()%(shape.getPointCount()-1-m_mesh_start-m_mesh_end) + m_mesh_start;
 	Vector2f branch = shape.getPoint(ind+1) - shape.getPoint(ind);
 	float t = (float)rand() / RAND_MAX;
 	Vector2f pos = shape.getPoint(ind) + branch * t;
 	m_leaf.setPosition(pos);
-	if (branch.y < 0) branch *= -1.f;
-	float alpha = atan2(branch.y, branch.x) * 180.f / M_PI * -1.f + 180.f;
-	int range = 120;
-	float angle = 90.f - (rand() % range - range / 2 + alpha);
+	int range = m_angle_range;
+	float angle = 0.f;
+	switch (m_leaves_direction) {
+	case 0: { // following branch 
+		if (branch.y < 0) branch *= -1.f;
+		float alpha = atan2(branch.y, branch.x) * 180.f / M_PI * -1.f + 180.f;
+		angle = 90.f - (rand() % range - range / 2 + alpha);
+		break;
+	}
+	case 1: { // up
+		angle = (rand() % range - range / 2);
+		break;
+	}
+	case 2: { // down
+		angle = (rand() % range - range / 2) + 180.f;
+		break;
+	}
+	};
 	m_leaf.setRotation(angle);
-}
-
-void LeafDrawer::loadFromFile (string file) {
-	ifstream fin(file);
-	Vector2f point;
-	vector<Vector2f> entity;
-	while (fin >> point.x >> point.y)
-		entity.push_back(point);
-	m_leaf.setPointCount(entity.size());
-	for (size_t i = 0; i < entity.size(); i++)
-		m_leaf.setPoint(i, entity[i]);
-	m_leaf.setOrigin(m_leaf.getPoint(0));
 }
 
 void LeafDrawer::setScale (float growth, float square) {
 	float k = growth / 1.2f * square;
 	if (m_growing || growth < 1.f * 0.3f) {
-		if (m_leaf.getScale().x < k)
+		if (m_leaf.getScale().x / m_scale_factor.x < k)
 			m_leaf.scale(1.05f, 1.05f);
 		else m_growing = false;
 	} else {
-		m_leaf.setScale(k, k);
+		m_leaf.setScale(k * m_scale_factor);
 	}
 }
 

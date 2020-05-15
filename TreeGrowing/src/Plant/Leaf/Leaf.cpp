@@ -1,23 +1,28 @@
 #include "Leaf.h"
 #include "Config.h"
+#include "Plant/ConfigReader.h"
 
 using namespace sf;
+using namespace std;
 
 Leaf::Leaf (
 	std::shared_ptr<Resources> required, 
-	std::shared_ptr<Resources> eatrate, 
-	std::shared_ptr<Resources> max_resources, 
-	Resources &resources, 
-	float scale, 
-	Vector2f origin
+    std::shared_ptr<Resources> eatrate,
+    std::shared_ptr<Resources> max_resources,
+    Resources &resources, 
+    float scale, 
+    sf::Vector2f origin,
+    std::string type,
+    ConvexShape &mesh
 ) : 
 	m_required(required), // TODO: make m_required a refference (pointer) -- done
 	m_eatrate(eatrate),
 	m_max_resources(max_resources),
-	m_square(1.f),
 	m_dead(false),
-	m_drawable(scale, origin)
+	m_type(type),
+	m_drawable(scale, origin, type, mesh)
 {
+	m_square = getConfigFloat(string(MODELS_FOLDER) + m_type + CONFIG_FILE, "LEAVES_SQUARE");
 	feed(resources);
 }
 
@@ -34,7 +39,7 @@ float Leaf::getWater (Air &air, Sun &sun) {
 float Leaf::getEnergy (Air &air, Sun &sun) {
 	return 
 		(sun.getWarm() * sun.getBrightness() + 
-		(air.getTemperature() - DEFAULT_TEMPERATURE) / 10.f) * 
+		(air.getTemperature() - DEFAULT_TEMPERATURE) / 100.f) * 
 		m_square * 0.5f;
 }
 

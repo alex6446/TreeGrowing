@@ -1,5 +1,6 @@
 #include "Plant.h"
 #include "Config.h"
+#include "Plant/ConfigReader.h"
 
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui-SFML.h"
@@ -12,20 +13,25 @@ Plant::Plant (Vector2f position, int id, string type)
 	m_type(type),
 	m_id(id),
 	m_mode(0),
-	m_required(0.24f, 0.35f, 0.25f),
-	m_eatrate(0.99f, 0.99f, 0.96),
-	m_max_collected(10000.f, 10000.f, 10000.f),
-	m_max_resources(10000.f, 10000.f, 10000.f),
-	m_growingRate(0.00001f),
 	m_growth(0.01f),
 	m_dead(false),
-	m_leaves(position),
-	m_drawable(position)
+	m_leaves(position, type),
+	m_drawable(position, type)
 {
 	m_name.resize(255);
 	m_title.resize(255);
 	m_name = m_type + " " + to_string(m_id);
 	m_title =  m_name + "###" + m_type + to_string(m_id);
+
+	string file = MODELS_FOLDER;
+	file += m_type;
+	string config = file + CONFIG_FILE;
+
+	m_required = getConfigResources(config, "PLANT_REQUIRED");
+	m_eatrate = getConfigResources(config, "PLANT_EATRATE");
+	m_max_collected = getConfigResources(config, "PLANT_MAX_COLLECTED");
+	m_max_resources = getConfigResources(config, "PLANT_MAX_RESOURCES");
+	m_growingRate = getConfigFloat(config, "PLANT_GROWING_RATE");
 }
 
 void Plant::update (Air &air, Ground &ground, Sun &sun) {

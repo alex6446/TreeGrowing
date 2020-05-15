@@ -13,6 +13,8 @@ private:
 	bool 			m_falling;
 
 	float 			m_step;
+	float 			m_acceleration;
+	sf::Vector2f	m_shift;
 
 public:
 

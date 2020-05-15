@@ -59,10 +59,10 @@
 #define SUN_RAYS_NUMBER 	 4
 #define SUN_Q_COEFFICIENT 	 2
 
-// SEED
-// Parameters
-#define SEED_SCALE 			 sf::Vector2f(0.4f, 0.4f)
-#define SEED_SHIFT 			 Vector2f(-5.f, 5.f)
-#define SEED_SPEED 			 5.f
-#define SEED_ACCELERATION 	 1.f
+// PATHS ///////////////////
 
+#define MODELS_FOLDER 		"assets/Models/"
+#define SHAPES_FOLDER 		"/shapes/"
+#define LEAF_FILE 			"/leaf.txt"
+#define SEED_FILE 			"/seed.txt"
+#define CONFIG_FILE 		"/config.txt"

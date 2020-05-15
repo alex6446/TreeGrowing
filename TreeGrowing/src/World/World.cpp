@@ -12,7 +12,8 @@ World::World ()
 	ContextSettings settings;
 	settings.antialiasingLevel = 8;
 	m_window.create(VideoMode::getDesktopMode(), "Plant Growing Simulation", Style::Fullscreen, settings);
-	m_window.setVerticalSyncEnabled(true);
+	//m_window.setVerticalSyncEnabled(true);
+	m_window.setFramerateLimit(60);
 	ImGui::SFML::Init(m_window);
 	m_ground.setup(m_window, m_air);
 	m_plants.setup(m_window);

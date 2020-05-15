@@ -11,7 +11,7 @@ using namespace std;
 using namespace sf;
 
 PlantsManager::PlantsManager () {
-	std::string s = "assets/Models/";
+	std::string s = MODELS_FOLDER;
 	std::vector<std::string> r;
     for(auto& p : filesystem::directory_iterator(s))
         m_types.push_back((p.path().string()).erase(0, s.size()));
@@ -29,14 +29,14 @@ void PlantsManager::update (Air &air, Ground &ground, Sun &sun, Vector2f mousePo
     	m_plants.emplace_back(m_seed.getPosition(), m_plants.size(), m_seed.getPlant());
     }
 
-    for (auto &tree : m_plants)
-    	tree.update(air, ground, sun);
+    for (auto &plant : m_plants)
+    	plant.update(air, ground, sun);
 
 }
 
 void PlantsManager::draw (RenderWindow &window) {
-	for (auto &tree : m_plants)
-    	tree.draw(window);
+	for (auto &plant : m_plants)
+    	plant.draw(window);
     m_seed.draw(window);
 }
 

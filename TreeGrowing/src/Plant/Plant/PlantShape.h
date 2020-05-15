@@ -9,7 +9,7 @@ private:
 
 	sf::Vector2f 	mOrigin;
 	sf::Vector2f 	mPosition;
-	float 			mScale;
+	sf::Vector2f 	mScale;
 
 public:
 
@@ -18,9 +18,9 @@ public:
 	sf::Vector2f getOrigin () const { return mOrigin; } 
 	void setOrigin (sf::Vector2f origin) { mOrigin = origin; }
 
-	float getScale () const { return mScale; }
-	void setScale (float k);
-	void scale (float k) { setScale(mScale * k); }
+	sf::Vector2f getScale () const { return mScale; }
+	void setScale (sf::Vector2f k);
+	void scale (sf::Vector2f k);
 
 	void setPosition (sf::Vector2f position);
 	sf::Vector2f getPosition () const { return mPosition; }

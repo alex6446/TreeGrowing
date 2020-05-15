@@ -1,22 +1,26 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <string>
+
 #include "PlantShape.h"
 
 class PlantDrawer {
 private:
 
-	PlantShape 	m_tree;
+	PlantShape 	m_plant;
 	int 	 	m_shapes;
 	int 		m_current;
 	float 		m_step;
-	std::string	m_path;
+	sf::Vector2f 	m_scale_factor;
+
+	std::string	m_type;
 
 public:
 
-	PlantDrawer (sf::Vector2f positoin);
+	PlantDrawer (sf::Vector2f positoin, std::string type);
 
-	PlantShape& getShape () { return m_tree; }
+	PlantShape& getShape () { return m_plant; }
 
 	bool update (float growth);
 	void draw (sf::RenderWindow &window);
