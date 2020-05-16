@@ -11,6 +11,7 @@ project "TreeGrowing"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir)
 	objdir ("obj/" .. outputdir)
@@ -24,6 +25,8 @@ project "TreeGrowing"
 		"vendor/**.h",
 		"vendor/**.cpp"
 	}
+	
+	defines { "_USE_MATH_DEFINES" }
 
 	includedirs {
 		"vendor",
@@ -35,19 +38,28 @@ project "TreeGrowing"
 	--flags "RelativeLinks"
 
 	links {
-		"sfml-graphics", "sfml-window", "sfml-system", "GL", "thor"
+		"sfml-graphics", "sfml-window", "sfml-system", "thor"
 	}
 
-	libdirs { "libs" }
-	linkoptions{ "-Wl,-rpath=libs" }
+	libdirs { "libs/%{cfg.system}" }
+
+	postbuildcommands {
+		("{COPY} assets %{cfg.buildtarget.directory}/assets")
+	}
 
 	configuration { "linux" }
+		links { "GL" }
+		linkoptions{ "-Wl,-rpath=libs" }
   		buildoptions { "-std=c++17" }
-
-  	postbuildcommands {
-  		("{COPY} libs/%{cfg.system} %{cfg.buildtarget.directory}/libs"),
-  		("{COPY} assets %{cfg.buildtarget.directory}")
-  	}
+		postbuildcommands {
+			("{COPY} libs/%{cfg.system}/. %{cfg.buildtarget.directory}/libs")
+		}
+		
+	configuration { "windows" }
+		links { "opengl32" }
+		postbuildcommands {
+			("{COPY} libs/%{cfg.system}/**.dll %{cfg.buildtarget.directory}")
+		}
 
    	filter "configurations:Debug"
         defines { "DEBUG" }
