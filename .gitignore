@@ -1,3 +1,7 @@
-build
-application
-.vscode
+# Binaries
+**/bin/
+obj/
+
+# Makefiles
+**.make
+Makefile

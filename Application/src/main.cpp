@@ -1,4 +1,4 @@
-#include "TreeGrowing/World.h"
+#include "TreeGrowing/TreeGrowing.h"
 #include <cstring>
 
 int main(int argc, char **argv) {
