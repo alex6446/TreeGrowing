@@ -63,6 +63,6 @@
 
 #define MODELS_FOLDER 		"assets/Models/"
 #define SHAPES_FOLDER 		"/shapes/"
-#define LEAF_FILE 			"/leaf.txt"
-#define SEED_FILE 			"/seed.txt"
-#define CONFIG_FILE 		"/config.txt"
+#define LEAF_FILE 			"/leaf.mesh"
+#define SEED_FILE 			"/seed.mesh"
+#define CONFIG_FILE 		"/config.cfg"

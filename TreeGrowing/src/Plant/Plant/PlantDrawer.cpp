@@ -19,7 +19,7 @@ PlantDrawer::PlantDrawer (Vector2f position, string type)
 	string shapes_folder = file + SHAPES_FOLDER;
 	ifstream fin;
 	while (true) {
-		fin.open(shapes_folder + to_string(m_shapes) + string(".txt"));
+		fin.open(shapes_folder + to_string(m_shapes) + string(".mesh"));
 		if (!fin.good()) {
 			fin.close();
 			break;
@@ -28,7 +28,7 @@ PlantDrawer::PlantDrawer (Vector2f position, string type)
 		m_shapes++;
 	}
 	m_step = 1.f / m_shapes;
-	m_plant.loadFromFile(shapes_folder + to_string(m_current) + string(".txt"));
+	m_plant.loadFromFile(shapes_folder + to_string(m_current) + string(".mesh"));
 	m_plant.setPosition(position);
 	m_plant.setFillColor(getConfigColor(file + CONFIG_FILE, "PLANT_COLOR"));
 	m_scale_factor = getConfigVector2f(file + CONFIG_FILE, "PLANT_SCALE_FACTOR");
@@ -38,7 +38,7 @@ bool PlantDrawer::update (float growth) {
 	if (growth > m_step * (m_current + 1) && m_current + 1 < m_shapes) {
 		m_current++;
 		m_plant.loadFromFile(string(MODELS_FOLDER) + m_type + 
-			string(SHAPES_FOLDER) + to_string(m_current) + string(".txt"));
+			string(SHAPES_FOLDER) + to_string(m_current) + string(".mesh"));
 		m_plant.setPosition(m_plant.getPosition());
 		m_plant.setScale(growth * m_scale_factor);
 		return true;
