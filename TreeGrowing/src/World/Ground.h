@@ -17,8 +17,8 @@ public:
 	Ground ();
 	void setup (sf::RenderWindow &window, Air &air);
 
-	float getMinerals () const { return m_minerals; }
-	float getHumidity () const { return m_humidity; }
+	inline float getMinerals () const { return m_minerals; }
+	inline float getHumidity () const { return m_humidity; }
 
 	void updateImGUI ();
 	void update (Air &air);

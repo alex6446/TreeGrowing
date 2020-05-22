@@ -15,8 +15,8 @@ public:
 
 	Sun ();
 
-	float getWarm () const { return m_warm; }
-	float getBrightness () const { return m_brightness; }
+	inline float getWarm () const { return m_warm; }
+	inline float getBrightness () const { return m_brightness; }
 
 	void updateImGUI ();
 	void update ();

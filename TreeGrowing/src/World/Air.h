@@ -15,11 +15,11 @@ public:
 
 	Air ();
 
-	float getHumidity () const { return m_humidity; }
-	float getTemperature () const { return m_temperature; }
+	inline float getHumidity () const { return m_humidity; }
+	inline float getTemperature () const { return m_temperature; }
 	float getTemperatureNormalized ();
-	sf::Color getColor () const { return m_color; } 
-	bool isUpdated () const { return m_updated; }
+	inline sf::Color getColor () const { return m_color; } 
+	inline bool isUpdated () const { return m_updated; }
 
 	void updateImGUI ();
 	void update ();

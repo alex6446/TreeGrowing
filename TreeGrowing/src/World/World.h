@@ -10,8 +10,6 @@
 class World {
 private:
 
-	int 				m_mode;
-
 	Air 				m_air;
 	Ground 				m_ground;
 	Sun 				m_sun;
@@ -25,7 +23,7 @@ public:
 	World ();
 	~World ();
 
-	bool exists () { return m_window.isOpen(); }
+	inline bool exists () { return m_window.isOpen(); }
 
 	void update ();
 	void draw ();
@@ -33,5 +31,8 @@ public:
 private:
 
 	void updateImGUI ();
+
+    void setupWindow ();
+    void setupImGUI ();
 
 };

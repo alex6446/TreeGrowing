@@ -33,8 +33,13 @@ public:
 
 	void generatePosition (PlantShape &shape);
 
+    int getLeavesCount() { return m_leaves.size(); }
+
 	void update (float growth);
 	void draw (sf::RenderWindow &window);
+
+    void updateImGuiInfo();
+    void updateImGuiSettings();
 
 private:
 

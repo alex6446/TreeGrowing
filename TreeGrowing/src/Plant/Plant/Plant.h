@@ -19,7 +19,6 @@ private:
 	int 				m_id;
 	std::string	 		m_name;
 	std::string	 		m_title;
-	int 				m_mode;
 
 	Resources 			m_resources;
 	Resources 			m_required;
@@ -40,7 +39,7 @@ public:
 
 	Plant (sf::Vector2f position, int id, std::string type);
 
-	bool isDead () { return m_dead; }
+	inline bool isDead () { return m_dead; }
 
 	void update (Air &air, Ground &ground, Sun &sun);
 	void draw (sf::RenderWindow &window);
@@ -53,5 +52,7 @@ private:
 	void consume ();
 
 	void updateImGUI ();
+    void updateImGuiInfo();
+    void updateImGuiSettings();
 
 };

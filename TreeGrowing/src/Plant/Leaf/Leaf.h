@@ -48,8 +48,8 @@ public:
     void generatePosition (PlantShape &shape);
     void scalePosition (float growth);
 
-    bool isDead () { return m_dead; }
-    bool isActive () { return m_drawable.isActive(); }
+    inline bool isDead () { return m_dead; }
+    inline bool isActive () { return m_drawable.isActive(); }
 
     void update (float growth);
     void draw (sf::RenderWindow &window);

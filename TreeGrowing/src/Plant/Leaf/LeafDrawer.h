@@ -36,7 +36,7 @@ public:
 
 	void setScale (float growth, float square);
 	void scalePosition (float growth);
-	bool isActive () { return m_active; }
+	inline bool isActive () { return m_active; }
 
 	void update (bool dead, float growth, float square);
 	void draw (sf::RenderWindow &window);

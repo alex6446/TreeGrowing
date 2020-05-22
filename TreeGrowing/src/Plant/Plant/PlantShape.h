@@ -15,15 +15,15 @@ public:
 
 	PlantShape ();
 
-	sf::Vector2f getOrigin () const { return mOrigin; } 
-	void setOrigin (sf::Vector2f origin) { mOrigin = origin; }
+	inline sf::Vector2f getOrigin () const { return mOrigin; } 
+	inline void setOrigin (sf::Vector2f origin) { mOrigin = origin; }
 
-	sf::Vector2f getScale () const { return mScale; }
+	inline sf::Vector2f getScale () const { return mScale; }
 	void setScale (sf::Vector2f k);
 	void scale (sf::Vector2f k);
 
 	void setPosition (sf::Vector2f position);
-	sf::Vector2f getPosition () const { return mPosition; }
+	inline sf::Vector2f getPosition () const { return mPosition; }
 
 	void loadFromFile (std::string file);
 

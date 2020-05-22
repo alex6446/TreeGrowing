@@ -25,7 +25,8 @@ public:
 
     void setup (sf::RenderWindow &window);
 
-    void click () { m_seed.click(); }
+    inline void click () { m_seed.click(); }
+    inline int getPlantsCount() { return m_plants.size(); }
 
 	void updateImGUI ();
     void update (Air &air, Ground &ground, Sun &sun, sf::Vector2f mousePosition);

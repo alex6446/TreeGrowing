@@ -5,16 +5,9 @@
 
 using namespace sf;
 
-World::World ()
-: 
-	m_mode(0)
-{
-	ContextSettings settings;
-	settings.antialiasingLevel = 8;
-	m_window.create(VideoMode::getDesktopMode(), "Plant Growing Simulation", Style::Fullscreen, settings);
-	//m_window.setVerticalSyncEnabled(true);
-	m_window.setFramerateLimit(60);
-	ImGui::SFML::Init(m_window);
+World::World () {
+	setupWindow();
+	setupImGUI();
 	m_ground.setup(m_window, m_air);
 	m_plants.setup(m_window);
 }
@@ -55,17 +48,33 @@ void World::draw () {
 }
 
 void World::updateImGUI () {
-	ImGui::Begin("Wrld");
-	if (ImGui::Button("   Settings   ")) m_mode = 0;
-	ImGui::SameLine();
-	if (ImGui::Button("   Info   ")) m_mode = 1;
-	switch (m_mode) {
-		case 0:
-		m_air.updateImGUI();
-		m_ground.updateImGUI();
-		m_sun.updateImGUI();
-		m_plants.updateImGUI();
-		break;
-	}
+    ImGui::Begin("World");
+    if (ImGui::CollapsingHeader("Info")) {
+        ImGui::Text("Plants:");
+        ImGui::SameLine();
+        ImGui::Text("%i", m_plants.getPlantsCount());
+    }
+    if (ImGui::CollapsingHeader("Settings")) {
+        m_air.updateImGUI();
+        m_ground.updateImGUI();
+        m_sun.updateImGUI();
+    }
+    m_plants.updateImGUI();
 	ImGui::End();
+}
+
+void World::setupWindow () {
+    ContextSettings settings;
+	settings.antialiasingLevel = 8;
+	m_window.create(VideoMode::getDesktopMode(), "Plant Growing Simulation", Style::Fullscreen, settings);
+	//m_window.setVerticalSyncEnabled(true);
+	m_window.setFramerateLimit(60);
+}
+
+void World::setupImGUI () {
+    ImGui::SFML::Init(m_window);
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.WindowRounding = 1.f;
+    style.ScrollbarRounding = 1.f;
+    style.TabRounding = 1.f;
 }

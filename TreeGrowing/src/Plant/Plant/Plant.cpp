@@ -5,6 +5,8 @@
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui-SFML.h"
 
+#include <iostream>
+
 using namespace sf;
 using namespace std;
 
@@ -12,7 +14,6 @@ Plant::Plant (Vector2f position, int id, string type)
 : 
 	m_type(type),
 	m_id(id),
-	m_mode(0),
 	m_growth(0.01f),
 	m_dead(false),
 	m_leaves(position, type),
@@ -69,7 +70,10 @@ void Plant::distribute_resources () {
 	m_leaves.feed(m_collected);
 	m_leaves.grow(m_collected, m_growth, m_drawable.getShape());
 
-	while (m_collected.check_capacity((m_required.multiply(m_growth + 1.f)).multiply(m_growth))) {
+	// Infinitive looop here if required is close to 0 --fixed
+	for (int i = 0; i < 500; i++) {
+		if (!m_collected.check_capacity((m_required.multiply(m_growth + 1.f)).multiply(m_growth)))
+			break;
 		m_collected.subtract((m_required.multiply(m_growth + 1.f)).multiply(m_growth));
 		if (m_growth < 1.f)
 			m_growth += m_growingRate;
@@ -89,53 +93,80 @@ void Plant::check_life () {
 
 void Plant::updateImGUI () {
 	ImGui::Begin(m_title.c_str());
-	if (ImGui::Button("   Settings   ")) m_mode = 0;
-	ImGui::SameLine();
-	if (ImGui::Button("   Info   ")) m_mode = 1;
-	switch (m_mode) {
-		case 0:
-		char input[255];
-		strcpy(input, m_name.c_str());
-		ImGui::Text("Required");
-		ImGui::SliderFloat("water##Required", &m_required.water, 0.f, 1.f);
-		ImGui::SliderFloat("energy##Required", &m_required.energy, 0.f, 1.f);
-		ImGui::SliderFloat("materials##Required", &m_required.materials, 0.f, 1.f);
-		ImGui::Text("EatRate");
-		ImGui::SliderFloat("water##EatRate", &m_eatrate.water, 0.f, 1.f);
-		ImGui::SliderFloat("energy##EatRate", &m_eatrate.energy, 0.f, 1.f);
-		ImGui::SliderFloat("materials##EatRate", &m_eatrate.materials, 0.f, 1.f);	
-		ImGui::Text("Name");
-		if( ImGui::InputText("##Change name", input, 255)) {
-			m_name = input;
-			m_title = input;
-			m_title += "###Tree" + to_string(m_id);
-		}
-		break;
-		case 1:
-		ImGui::Text("Growth:");
-		ImGui::SameLine();
-		ImGui::Text("%.6f", m_growth);
-		ImGui::Text("Resources");
-		ImGui::Text("Water:");
-		ImGui::SameLine();
-		ImGui::Text("%.6f", m_resources.water);
-		ImGui::Text("Energy:");
-		ImGui::SameLine();
-		ImGui::Text("%.6f", m_resources.energy);
-		ImGui::Text("Materials:");
-		ImGui::SameLine();
-		ImGui::Text("%.6f", m_resources.materials);
-		ImGui::Text("Collected");
-		ImGui::Text("Water:");
-		ImGui::SameLine();
-		ImGui::Text("%.6f", m_collected.water);
-		ImGui::Text("Energy:");
-		ImGui::SameLine();
-		ImGui::Text("%.6f", m_collected.energy);
-		ImGui::Text("Materials:");
-		ImGui::SameLine();
-		ImGui::Text("%.6f", m_collected.materials);
-	}
+    if (ImGui::CollapsingHeader("Info")) {
+        ImGui::Text("Growth:");
+        ImGui::SameLine();
+        ImGui::Text("%.6f", m_growth);
+        ImGui::Text("Leaves:");
+        ImGui::SameLine();
+        ImGui::Text("%i", m_leaves.getLeavesCount());
+        if (ImGui::BeginTabBar("InfoBar")) {
+            if (ImGui::BeginTabItem("   Plant    ")) {
+                updateImGuiInfo();
+                ImGui::EndTabItem();
+            }
+            if (ImGui::BeginTabItem("   Leaves   ")) {
+                m_leaves.updateImGuiInfo();
+                ImGui::EndTabItem();
+            }
+            ImGui::EndTabBar();
+        }
+    }
+    if (ImGui::CollapsingHeader("Settings")) {
+        ImGui::Text("Name");
+        char input[255];
+        strcpy(input, m_name.c_str());
+        if( ImGui::InputText("##Change name", input, 255)) {
+            m_name = input;
+            m_title = input;
+            m_title += "###" + m_type + to_string(m_id);
+        }
+        if (ImGui::BeginTabBar("SettingsBar")) {
+            if (ImGui::BeginTabItem("   Plant    ")) {
+                updateImGuiSettings();
+                ImGui::EndTabItem();
+            }
+            if (ImGui::BeginTabItem("   Leaves   ")) {
+                m_leaves.updateImGuiSettings();
+                ImGui::EndTabItem();
+            }
+            ImGui::EndTabBar();
+        }
+    }
 	ImGui::End();
 
+}
+
+void Plant::updateImGuiInfo () {
+    ImGui::Text("Resources");
+    ImGui::Text("Water:");
+    ImGui::SameLine();
+    ImGui::Text("%.6f", m_resources.water);
+    ImGui::Text("Energy:");
+    ImGui::SameLine();
+    ImGui::Text("%.6f", m_resources.energy);
+    ImGui::Text("Materials:");
+    ImGui::SameLine();
+    ImGui::Text("%.6f", m_resources.materials);
+    ImGui::Text("Collected");
+    ImGui::Text("Water:");
+    ImGui::SameLine();
+    ImGui::Text("%.6f", m_collected.water);
+    ImGui::Text("Energy:");
+    ImGui::SameLine();
+    ImGui::Text("%.6f", m_collected.energy);
+    ImGui::Text("Materials:");
+    ImGui::SameLine();
+    ImGui::Text("%.6f", m_collected.materials);
+}
+
+void Plant::updateImGuiSettings () {
+    ImGui::Text("Required");
+    ImGui::SliderFloat("water##Required", &m_required.water, 0.f, 1.f);
+    ImGui::SliderFloat("energy##Required", &m_required.energy, 0.f, 1.f);
+    ImGui::SliderFloat("materials##Required", &m_required.materials, 0.f, 1.f);
+    ImGui::Text("EatRate");
+    ImGui::SliderFloat("water##EatRate", &m_eatrate.water, 0.f, 1.f);
+    ImGui::SliderFloat("energy##EatRate", &m_eatrate.energy, 0.f, 1.f);
+    ImGui::SliderFloat("materials##EatRate", &m_eatrate.materials, 0.f, 1.f);	
 }

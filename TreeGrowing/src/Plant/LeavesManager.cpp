@@ -2,6 +2,9 @@
 #include "Config.h"
 #include "Plant/ConfigReader.h"
 
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui-SFML.h"
+
 #include <iostream>
 
 using namespace sf;
@@ -44,7 +47,9 @@ void LeavesManager::feed (Resources &resources) {
 void LeavesManager::grow (Resources &resources, float growth, PlantShape &shape) {
 	size_t limit = growth * m_growingRate;
 	//while (resources.check_capacity(m_required->multiply(1.f)) && m_leaves.size() <= limit) {
-	while (resources.check_capacity(m_required->multiply(1.f)) && m_leaves.size() <= limit) {
+	for (int i = 0; i < 50; i++) {
+		if (!(resources.check_capacity(m_required->multiply(1.f)) && m_leaves.size() <= limit))
+			break;
 		m_leaves.emplace_back(
 			m_required, 
 			m_eatrate, 
@@ -91,4 +96,20 @@ void LeavesManager::loadFromFile (string file) {
 	for (size_t i = 0; i < entity.size(); i++)
 		m_mesh.setPoint(i, entity[i]);
 	m_mesh.setOrigin(m_mesh.getPoint(0));
+}
+
+
+void LeavesManager::updateImGuiInfo() {
+    
+}
+
+void LeavesManager::updateImGuiSettings() {
+    ImGui::Text("Required");
+    ImGui::SliderFloat("water##Required", &m_required->water, 0.00001f, 1.f);
+    ImGui::SliderFloat("energy##Required", &m_required->energy, 0.00001f, 1.f);
+    ImGui::SliderFloat("materials##Required", &m_required->materials, 0.00001f, 1.f);
+    ImGui::Text("EatRate");
+    ImGui::SliderFloat("water##EatRate", &m_eatrate->water, 0.f, 1.f);
+    ImGui::SliderFloat("energy##EatRate", &m_eatrate->energy, 0.f, 1.f);
+    ImGui::SliderFloat("materials##EatRate", &m_eatrate->materials, 0.f, 1.f);	
 }

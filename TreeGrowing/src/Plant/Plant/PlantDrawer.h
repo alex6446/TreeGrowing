@@ -20,7 +20,7 @@ public:
 
 	PlantDrawer (sf::Vector2f positoin, std::string type);
 
-	PlantShape& getShape () { return m_plant; }
+	inline PlantShape& getShape () { return m_plant; }
 
 	bool update (float growth);
 	void draw (sf::RenderWindow &window);
