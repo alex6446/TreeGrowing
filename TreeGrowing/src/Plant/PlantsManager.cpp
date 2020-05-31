@@ -12,7 +12,6 @@ using namespace sf;
 
 PlantsManager::PlantsManager () {
 	std::string s = MODELS_FOLDER;
-	std::vector<std::string> r;
     for(auto& p : filesystem::directory_iterator(s))
         m_types.push_back((p.path().string()).erase(0, s.size()));
 

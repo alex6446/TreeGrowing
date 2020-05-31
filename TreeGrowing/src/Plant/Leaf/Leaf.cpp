@@ -31,7 +31,7 @@ Leaf::~Leaf () {}
 float Leaf::getWater (Air &air, Sun &sun) {
 	return 
 		(air.getHumidity() - 
-		(air.getTemperature() - DEFAULT_TEMPERATURE) / 10.f * 
+		(air.getTemperature() - DEFAULT_TEMPERATURE) / 5.f * 
 		sun.getWarm() * sun.getBrightness()) * 
 		m_square * 0.1f;
 }

@@ -66,3 +66,7 @@
 #define LEAF_FILE 			"/leaf.mesh"
 #define SEED_FILE 			"/seed.mesh"
 #define CONFIG_FILE 		"/config.cfg"
+
+// PANT ///////////////////
+
+#define RESOURCES_MIN_RANGE 0.00001f
