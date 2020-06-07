@@ -106,7 +106,7 @@ void LeavesManager::updateImGuiInfo() {
 void LeavesManager::updateImGuiSettings() {
     ImGui::Text("Required");
     ImGui::SliderFloat("water##Required", &m_required->water, RESOURCES_MIN_RANGE, 0.05f, "%.6f");
-    ImGui::SliderFloat("energy##Required", &m_required->energy, RESOURCES_MIN_RANGE, 0.005f, "%.6f");
+    ImGui::SliderFloat("energy##Required", &m_required->energy, RESOURCES_MIN_RANGE, 0.05f, "%.6f");
     ImGui::SliderFloat("materials##Required", &m_required->materials, RESOURCES_MIN_RANGE, 0.005f, "%.6f");
     ImGui::Text("EatRate");
     ImGui::SliderFloat("water##EatRate", &m_eatrate->water, RESOURCES_MIN_RANGE, 1.f, "%.6f");
